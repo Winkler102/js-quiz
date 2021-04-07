@@ -10,6 +10,9 @@
     --buttonhover-color: rgba(218,112,214, 0.5);
     --buttonpress-color: rgba(218,112,214, 0.3);
   }
+body {
+    background-color: #fffdd0;
+}
 
   /*Header Styles*/
   header {
