@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JS Quiz</title>
+    <link rel="stylesheet" href="./assets/styles/style.css">
+</head>
+
+<body>
+    <header>
+        <div>
+            <a href="#" class="scoresheet">View High Score</a>
+        </div>
+        <div>
+            Score: <span id="score">0</span>
+        </div>
+        <div>
+            Time: <span id="time">60</span>
+        </div>
+    </header>
+    <main>
+        <div class="question">
+            <h1>The JavaScript Quiz Game</h1>
+        </div>
+        <div class="game-rules">
+            <p>
+                Hello and welcome to the JavaScript Quiz game, I'm your host Andy Droid and I will take you throught the
+                rules.
+            </p>
+            <ol>
+                <li>
+                    Answer as many question as you can within the time limt
+                </li>
+                <li>
+                    You gain 10 seconds from a correct answer
+                </li>
+                <li>
+                    you lose 5 seconds from a wrong answer
+                </li>
+                <li>
+                    You score will be the time remaining when you finish
+                </li>
+            </ol>
+
+        </div>
+        <div class="answers-list" id="answers-list">
+            <ol class="multiple-choice" id="multiple-choice">
+                <li class="answer">
+                    <button class="answer-button">Start</button>
+                </li>
+            </ol>
+        </div>
+    </main>
+    <script src="./assets/js/script.js"></script>
+</body>
+
+</html>
