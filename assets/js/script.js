@@ -1,5 +1,4 @@
 //Global Variables
-
 let timer = 60;
 let newQuiz = true;
 let scoreCheckLoop = true;
@@ -72,9 +71,12 @@ let createMultiChoice = function (choosenQuestion) {
         newQuiz = false;
     } else {
         for (y = 0; y < questionsArray[choosenQuestion].a.length; y++) {
-            document.querySelector("#answer-button" + (y + 1)).value = questionsArray[choosenQuestion].a[y];
-            document.querySelector("#answer-button" + (y + 1)).textContent = questionsArray[choosenQuestion].a[y];
+            const answerButton = document.querySelector("#answer-button" + (y + 1));
 
+            if (answerButton !== null) {
+                answerButton.value = questionsArray[choosenQuestion].a[y];
+                answerButton.textContent = questionsArray[choosenQuestion].a[y];
+            }
         }
     }
 }
@@ -112,7 +114,6 @@ let answerQuestion = function () {
 let randomQuestion = function () {
     questionChoosen = Math.floor(Math.random() * (questionsArray.length));
     if (quizComplete < 1) {
-        console.log("twice")
         finalScore();
     } else if (quesChoosenArray.includes(questionChoosen)) {
         randomQuestion();
@@ -146,13 +147,13 @@ let runTimer = function () {
 
 // reset page
 let resetButton = function () {
+    saveHighscore();
     window.location.reload();
 }
 
 // creates Highscore table
 
 let highscoreTable = function () {
-
     let scoreTable = document.createElement("table")
     scoreTable.className = "score-table";
     scoreTable.id = "score-table"
@@ -183,11 +184,22 @@ let highscoreTable = function () {
     }
 
     document.querySelector("#reset-button").addEventListener("click", resetButton);
+
+}
+
+//Orders the highscores
+let orderHighscore = function () {
+    scoreboard.sort((a, b) => (a.score < b.score) ? 1 : -1);
+    if (scoreboard.length > 5) {
+        scoreboard.length = 5;
+    }
 }
 
 // Setups highscore page
 let setHighscoreBoard = function () {
+    scoresheetEl.textContent = "";
     clearBoard();
+    orderHighscore();
     questionEl.textContent = "Highscores";
     answerListEl.textContent = "";
     highscoreTable();
@@ -224,48 +236,55 @@ let addNewHighscore = function () {
         name: getName(),
         score: timer
     };
-    console.log(newScore);
     scoreboard.push(newScore);
+
 }
 
 // checks for a highscore
 let highscoreCheck = function () {
-    if (scoreCheckLoop) {
-        if (scoreboard === null) {
-            answerListEl.textContent = "'You got a highscore please enter name.' - Andy Droid";
-            createNameForm();
-            document.querySelector("#submit").addEventListener("click", addNewHighscore)
-        } else {
-            for (z = 0; z < 5; z++) {
-                if (timer > scoreboard[z].score) {
-                    answerListEl.textContent = "'You got a highscore please enter name.' - Andy Droid";
-                    createNameForm();
-                    break;
-                } else {
-                    answerListEl.textContent = "'You did not get a highscore better luck next time.' - Andy Dorid";
-                }
+
+    if (scoreboard.length < 5) {
+        answerListEl.textContent = "'You got a highscore please enter name.' - Andy Droid";
+        createNameForm();
+        const submitSelect = document.querySelector("#submit");
+        submitSelect.addEventListener("click", addNewHighscore)
+        submitSelect.addEventListener("click", setHighscoreBoard)
+    } else {
+        for (z = 0; z < 5; z++) {
+            if (timer > scoreboard[z].score) {
+                answerListEl.textContent = "'You got a highscore please enter name.' - Andy Droid";
+                createNameForm();
+                const submitSelect = document.querySelector("#submit");
+                submitSelect.addEventListener("click", addNewHighscore)
+                submitSelect.addEventListener("click", setHighscoreBoard)
+                break;
+            } else {
+                answerListEl.textContent = "'You did not get a highscore better luck next time.' - Andy Dorid";
             }
         }
-        scoreCheckLoop = false;
     }
 }
 
 // reads final quiz score and clears board
 let finalScore = function () {
-    clearBoard();
-    if (document.querySelector("#answer-button1") != null ||
-        document.querySelector("#answer-button2") != null ||
-        document.querySelector("#answer-button3") != null ||
-        document.querySelector("#answer-button4") != null) {
-        document.querySelector("#answer-button1").remove();
-        document.querySelector("#answer-button2").remove();
-        document.querySelector("#answer-button3").remove();
-        document.querySelector("#answer-button4").remove();
-    }
 
-    timeStop = true;
-    questionEl.textContent = "Your Final Score is " + timer;
-    highscoreCheck();
+    if (scoreCheckLoop) {
+        clearBoard();
+        if (document.querySelector("#answer-button1") != null ||
+            document.querySelector("#answer-button2") != null ||
+            document.querySelector("#answer-button3") != null ||
+            document.querySelector("#answer-button4") != null) {
+            document.querySelector("#answer-button1").remove();
+            document.querySelector("#answer-button2").remove();
+            document.querySelector("#answer-button3").remove();
+            document.querySelector("#answer-button4").remove();
+        }
+
+        timeStop = true;
+        questionEl.textContent = "Your Final Score is " + timer;
+        highscoreCheck();
+        scoreCheckLoop = false;
+    }
 }
 
 // runs the quiz
@@ -283,9 +302,15 @@ let saveHighscore = function () {
 }
 
 let loadHighscores = function () {
-    scoreboard = JSON.parse(localStorage.getItem("scoreboard"))
+    scoreboard = localStorage.getItem("scoreboard")
+    if (scoreboard === null) {
+        scoreboard = [];
+    } else {
+        scoreboard = JSON.parse(scoreboard);
+    }
 }
 
 loadHighscores();
+
 startButtonEl.addEventListener("click", runQuiz);
 scoresheetEl.addEventListener('click', setHighscoreBoard);
