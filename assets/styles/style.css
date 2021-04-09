@@ -60,6 +60,12 @@ body {
     background-color: var(--buttonpress-color);
 }
 
+.reset-button {
+    height: 50px;
+    width: 100px;
+    margin: 50px;
+}
+
 /*Score Table styles*/
 .score-table {
     margin: 0 auto;

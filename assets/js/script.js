@@ -1,3 +1,5 @@
+//Global Variables
+
 let timer = 60;
 let newQuiz = true;
 let scoreCheckLoop = true;
@@ -5,29 +7,9 @@ let questionChoosen = 0;
 let quesChoosenArray = [];
 let timeStop = false;
 let quizComplete = 5;
-let scoreboard = [
-    {
-        name: "empty",
-        score: 0
-    },
-    {
-        name: "empty",
-        score: 0
-    },
-    {
-        name: "empty",
-        score: 0
-    },
-    {
-        name: "empty",
-        score: 0
-    },
-    {
-        name: "empty",
-        score: 0
-    }
-]
+let scoreboard = [];
 
+//Questions
 const questionsArray = [
     {
         q: "This is a test question #1",
@@ -55,6 +37,7 @@ const questionsArray = [
         ca: "Answer d"
     }];
 
+// QuerSelectors
 let startButtonEl = document.querySelector("#answer-button");
 let answerOptionsEl = document.querySelector("#answer");
 let answerListEl = document.querySelector("#answers-list")
@@ -65,12 +48,13 @@ let setTime = document.querySelector("#time");
 let mainEl = document.querySelector("#main");
 let scoresheetEl = document.querySelector("#scoresheet")
 
+// Empty page for new content
 let clearBoard = function () {
     answerOptionsEl.remove();
     gameRulesEl.remove();
 }
 
-
+// Generates answer buttons
 let createMultiChoice = function (choosenQuestion) {
     if (newQuiz) {
         for (o = 0; o < questionsArray[choosenQuestion].a.length; o++) {
@@ -95,6 +79,7 @@ let createMultiChoice = function (choosenQuestion) {
     }
 }
 
+// Checks if answer is correct
 let checkAnswer = function (event) {
     let selectedAnswer = event.target.value;
     if (selectedAnswer === questionsArray[questionChoosen].ca) {
@@ -109,38 +94,7 @@ let checkAnswer = function (event) {
     quizComplete--;
 }
 
-let randomQuestion = function () {
-    questionChoosen = Math.floor(Math.random() * (questionsArray.length));
-    if (quizComplete < 1) {
-        finalScore();
-    } else if (quesChoosenArray.includes(questionChoosen)) {
-        randomQuestion();
-    } else {
-        quesChoosenArray.push(questionChoosen);
-    }
-
-}
-
-let runTimer = function () {
-    let timeTraker = setInterval(function () {
-        if (timer < 1 || timeStop) {
-            setTime.textContent = timer;
-            clearInterval(timeTraker);
-            finalScore();
-        } else {
-            setTime.textContent = timer;
-            timer--
-        }
-    }, 1000);
-}
-
-let askQuestion = function () {
-    randomQuestion();
-    questionEl.textContent = questionsArray[questionChoosen].q;
-    createMultiChoice(questionChoosen);
-    answerQuestion();
-}
-
+// Makes answer buttons work
 let answerQuestion = function () {
     if (quizComplete > 0) {
         document.querySelector("#answer-button1").addEventListener("click", checkAnswer)
@@ -154,11 +108,92 @@ let answerQuestion = function () {
     }
 }
 
-let getName = function (array) {
-    scoreboard[array].name = document.querySelector("#name-form").value;
+// Randmizes the question order
+let randomQuestion = function () {
+    questionChoosen = Math.floor(Math.random() * (questionsArray.length));
+    if (quizComplete < 1) {
+        finalScore();
+    } else if (quesChoosenArray.includes(questionChoosen)) {
+        randomQuestion();
+    } else {
+        quesChoosenArray.push(questionChoosen);
+    }
+
 }
 
-let createNameForm = function (array) {
+//displays selected question
+let askQuestion = function () {
+    randomQuestion();
+    questionEl.textContent = questionsArray[questionChoosen].q;
+    createMultiChoice(questionChoosen);
+    answerQuestion();
+}
+
+// run timer
+let runTimer = function () {
+    let timeTraker = setInterval(function () {
+        if (timer < 1 || timeStop) {
+            setTime.textContent = timer;
+            clearInterval(timeTraker);
+            finalScore();
+        } else {
+            setTime.textContent = timer;
+            timer--
+        }
+    }, 1000);
+}
+
+// reset page
+let resetButton = function () {
+    window.location.reload();
+}
+
+// creates Highscore table
+
+let highscoreTable = function () {
+
+    let scoreTable = document.createElement("table")
+    scoreTable.className = "score-table";
+    scoreTable.id = "score-table"
+    for (let g = 0; g < scoreboard.length; g++) {
+        let tableRow = document.createElement("tr");
+        let tableName = document.createElement("th");
+        tableName.textContent = scoreboard[g].name;
+        let tableScore = document.createElement("th");
+        tableScore.textContent = scoreboard[g].score;
+        if (g % 2 == 0) {
+            tableRow.className = "colored-background";
+        }
+        tableRow.appendChild(tableName);
+        tableRow.appendChild(tableScore);
+        scoreTable.appendChild(tableRow);
+    }
+
+    mainEl.appendChild(scoreTable);
+
+    let oneReset = true
+    if (oneReset) {
+        let reset = document.createElement("button")
+        reset.className = "answer-button reset-button";
+        reset.id = "reset-button";
+        reset.textContent = "Reset";
+        mainEl.appendChild(reset);
+        oneReset = false;
+    }
+
+    document.querySelector("#reset-button").addEventListener("click", resetButton);
+}
+
+// Setups highscore page
+let setHighscoreBoard = function () {
+    clearBoard();
+    questionEl.textContent = "Highscores";
+    answerListEl.textContent = "";
+    highscoreTable();
+}
+
+// vreate name entry box when getting highscore
+let createNameForm = function () {
     let nameForm = document.createElement("input")
     nameForm.className = "name-form";
     nameForm.id = "name-form";
@@ -175,63 +210,48 @@ let createNameForm = function (array) {
     answerListEl.appendChild(newLine)
     answerListEl.appendChild(nameForm);
     answerListEl.appendChild(submitName);
-
-    document.querySelector("#submit").addEventListener('click', function () { getName(array) });
-    document.querySelector("#submit").addEventListener('click', setHighscoreBoard);
-
 }
 
-let highscoreTable = function () {
-    scoreboard = JSON.parse(localStorage.getItem("scoreboard"))
-    let scoreTable = document.createElement("table")
-    scoreTable.className = "score-table";
-    scoreTable.id = "score-table"
-    for (let g = 0; g < scoreboard.length; g++) {
-        let tableRow = document.createElement("tr");
-        let tableName = document.createElement("th");
-        console.log(scoreboard[g].name)
-        tableName.textContent = scoreboard[g].name;
-        let tableScore = document.createElement("th");
-        tableScore.textContent = scoreboard[g].score;
-        if (g % 2 == 0) {
-            tableRow.className = "colored-background";
-        }
-        tableRow.appendChild(tableName);
-        tableRow.appendChild(tableScore);
-        scoreTable.appendChild(tableRow);
-    }
-    mainEl.appendChild(scoreTable);
+// gets name from entry box
+let getName = function () {
+    return document.querySelector("#name-form").value;
 }
 
-let saveHighscore = function () {
-    localStorage.setItem("scoreboard", JSON.stringify(scoreboard));
+// adds highscore to scoreboard array
+let addNewHighscore = function () {
+    newScore = {
+        name: getName(),
+        score: timer
+    };
+    console.log(newScore);
+    scoreboard.push(newScore);
 }
 
-let setHighscoreBoard = function () {
-    clearBoard();
-    questionEl.textContent = "Highscores";
-    saveHighscore();
-    answerListEl.textContent = "";
-    highscoreTable();
-}
-
+// checks for a highscore
 let highscoreCheck = function () {
     if (scoreCheckLoop) {
-        for (z = 0; z < 5; z++) {
-            if (timer > scoreboard[z].score) {
-                answerListEl.textContent = "'You got a highscore please enter name.' - Andy Droid";
-                scoreboard[z].score = timer;
-                createNameForm(z);
-                break;
-            } else {
-                answerListEl.textContent = "'You did not get a highscore better luck next time.' - Andy Dorid";
+        console.log(scoreboard);
+        if (scoreboard === null) {
+            answerListEl.textContent = "'You got a highscore please enter name.' - Andy Droid";
+            createNameForm();
+            document.querySelector("#submit").addEventListener("click", addNewHighscore)
+            console.log("new scpre");
+        } else {
+            for (z = 0; z < 5; z++) {
+                if (timer > scoreboard[z].score) {
+                    answerListEl.textContent = "'You got a highscore please enter name.' - Andy Droid";
+                    createNameForm();
+                    break;
+                } else {
+                    answerListEl.textContent = "'You did not get a highscore better luck next time.' - Andy Dorid";
+                }
             }
         }
-
         scoreCheckLoop = false;
     }
 }
 
+// reads final quiz score and clears board
 let finalScore = function () {
     clearBoard();
     if (document.querySelector("#answer-button1") != null ||
@@ -249,12 +269,24 @@ let finalScore = function () {
     highscoreCheck();
 }
 
+// runs the quiz
 let runQuiz = function () {
     clearBoard();
     runTimer();
     askQuestion();
 };
 
+// save and load from local storage
 
+// let saveHighscore = function () {
+//     let storedScoreboard = scoreboard;
+//     localStorage.setItem("scoreboard", JSON.stringify(storedScoreboard));
+// }
+
+// let loadHighscores = function () {
+//     scoreboard = JSON.parse(localStorage.getItem("scoreboard"))
+// }
+
+// loadHighscores();
 startButtonEl.addEventListener("click", runQuiz);
 scoresheetEl.addEventListener('click', setHighscoreBoard);
