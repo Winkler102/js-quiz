@@ -8,23 +8,23 @@ let quizComplete = 5;
 let scoreboard = [
     {
         name: "empty",
-        score: 1000
+        score: 0
     },
     {
         name: "empty",
-        score: 1000
+        score: 0
     },
     {
         name: "empty",
-        score: 50
+        score: 0
     },
     {
         name: "empty",
-        score: 30
+        score: 0
     },
     {
         name: "empty",
-        score: 10
+        score: 0
     }
 ]
 
@@ -182,8 +182,25 @@ let createNameForm = function (array) {
 }
 
 let highscoreTable = function () {
-    answerListEl.textContent = JSON.parse(localStorage.getItem("scoreboard"))
-    
+    scoreboard = JSON.parse(localStorage.getItem("scoreboard"))
+    let scoreTable = document.createElement("table")
+    scoreTable.className = "score-table";
+    scoreTable.id = "score-table"
+    for (let g = 0; g < scoreboard.length; g++) {
+        let tableRow = document.createElement("tr");
+        let tableName = document.createElement("th");
+        console.log(scoreboard[g].name)
+        tableName.textContent = scoreboard[g].name;
+        let tableScore = document.createElement("th");
+        tableScore.textContent = scoreboard[g].score;
+        if (g % 2 == 0) {
+            tableRow.className = "colored-background";
+        }
+        tableRow.appendChild(tableName);
+        tableRow.appendChild(tableScore);
+        scoreTable.appendChild(tableRow);
+    }
+    mainEl.appendChild(scoreTable);
 }
 
 let saveHighscore = function () {
@@ -191,6 +208,8 @@ let saveHighscore = function () {
 }
 
 let setHighscoreBoard = function () {
+    clearBoard();
+    questionEl.textContent = "Highscores";
     saveHighscore();
     answerListEl.textContent = "";
     highscoreTable();
@@ -238,5 +257,4 @@ let runQuiz = function () {
 
 
 startButtonEl.addEventListener("click", runQuiz);
-scoresheetEl.addEventListener('click', clearBoard);
 scoresheetEl.addEventListener('click', setHighscoreBoard);

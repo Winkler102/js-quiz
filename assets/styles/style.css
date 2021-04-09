@@ -59,3 +59,19 @@ body {
 .answer-button:active {
     background-color: var(--buttonpress-color);
 }
+
+/*Score Table styles*/
+.score-table {
+    margin: 0 auto;
+}
+
+.colored-background {
+    background-color: var(--button-color);
+
+}
+
+.score-table th {
+    padding: 20px;
+    margin: 50px;
+    font-size: 20px;
+}
