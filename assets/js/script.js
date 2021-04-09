@@ -112,6 +112,7 @@ let answerQuestion = function () {
 let randomQuestion = function () {
     questionChoosen = Math.floor(Math.random() * (questionsArray.length));
     if (quizComplete < 1) {
+        console.log("twice")
         finalScore();
     } else if (quesChoosenArray.includes(questionChoosen)) {
         randomQuestion();
@@ -192,7 +193,7 @@ let setHighscoreBoard = function () {
     highscoreTable();
 }
 
-// vreate name entry box when getting highscore
+// create name entry box when getting highscore
 let createNameForm = function () {
     let nameForm = document.createElement("input")
     nameForm.className = "name-form";
@@ -230,12 +231,10 @@ let addNewHighscore = function () {
 // checks for a highscore
 let highscoreCheck = function () {
     if (scoreCheckLoop) {
-        console.log(scoreboard);
         if (scoreboard === null) {
             answerListEl.textContent = "'You got a highscore please enter name.' - Andy Droid";
             createNameForm();
             document.querySelector("#submit").addEventListener("click", addNewHighscore)
-            console.log("new scpre");
         } else {
             for (z = 0; z < 5; z++) {
                 if (timer > scoreboard[z].score) {
@@ -278,15 +277,15 @@ let runQuiz = function () {
 
 // save and load from local storage
 
-// let saveHighscore = function () {
-//     let storedScoreboard = scoreboard;
-//     localStorage.setItem("scoreboard", JSON.stringify(storedScoreboard));
-// }
+let saveHighscore = function () {
+    let storedScoreboard = scoreboard;
+    localStorage.setItem("scoreboard", JSON.stringify(storedScoreboard));
+}
 
-// let loadHighscores = function () {
-//     scoreboard = JSON.parse(localStorage.getItem("scoreboard"))
-// }
+let loadHighscores = function () {
+    scoreboard = JSON.parse(localStorage.getItem("scoreboard"))
+}
 
-// loadHighscores();
+loadHighscores();
 startButtonEl.addEventListener("click", runQuiz);
 scoresheetEl.addEventListener('click', setHighscoreBoard);
