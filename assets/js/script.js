@@ -1,9 +1,32 @@
 let timer = 60;
 let newQuiz = true;
+let scoreCheckLoop = true;
 let questionChoosen = 0;
 let quesChoosenArray = [];
 let timeStop = false;
-let quizComplete = 3;
+let quizComplete = 5;
+let scoreboard = [
+    {
+        name: "empty",
+        score: 1000
+    },
+    {
+        name: "empty",
+        score: 1000
+    },
+    {
+        name: "empty",
+        score: 50
+    },
+    {
+        name: "empty",
+        score: 30
+    },
+    {
+        name: "empty",
+        score: 10
+    }
+]
 
 const questionsArray = [
     {
@@ -20,14 +43,27 @@ const questionsArray = [
         q: "This is a test question #3",
         a: ["Answer !", "Answer @", "Answer #", "Answer $"],
         ca: "Answer #"
+    },
+    {
+        q: "This is a test question #4",
+        a: ["Answer a", "Answer b", "Answer c", "Answer d"],
+        ca: "Answer c"
+    },
+    {
+        q: "This is a test question #5",
+        a: ["Answer a", "Answer b", "Answer c", "Answer d"],
+        ca: "Answer d"
     }];
 
 let startButtonEl = document.querySelector("#answer-button");
 let answerOptionsEl = document.querySelector("#answer");
+let answerListEl = document.querySelector("#answers-list")
 let gameRulesEl = document.querySelector("#game-rules");
 let questionEl = document.querySelector("#question");
 let multipleChoiceEl = document.querySelector("#multiple-choice");
 let setTime = document.querySelector("#time");
+let mainEl = document.querySelector("#main");
+let scoresheetEl = document.querySelector("#scoresheet")
 
 let clearBoard = function () {
     answerOptionsEl.remove();
@@ -62,10 +98,8 @@ let createMultiChoice = function (choosenQuestion) {
 let checkAnswer = function (event) {
     let selectedAnswer = event.target.value;
     if (selectedAnswer === questionsArray[questionChoosen].ca) {
-        console.log("correct");
         timer += 10;
     } else {
-        console.log("incorrect");
         if (timer > 5) {
             timer -= 5;
         } else {
@@ -76,10 +110,7 @@ let checkAnswer = function (event) {
 }
 
 let randomQuestion = function () {
-
     questionChoosen = Math.floor(Math.random() * (questionsArray.length));
-    console.log(quizComplete)
-
     if (quizComplete < 1) {
         finalScore();
     } else if (quesChoosenArray.includes(questionChoosen)) {
@@ -87,7 +118,7 @@ let randomQuestion = function () {
     } else {
         quesChoosenArray.push(questionChoosen);
     }
-    console.log("in random question")
+
 }
 
 let runTimer = function () {
@@ -120,8 +151,65 @@ let answerQuestion = function () {
         document.querySelector("#answer-button2").addEventListener("click", askQuestion);
         document.querySelector("#answer-button3").addEventListener("click", askQuestion);
         document.querySelector("#answer-button4").addEventListener("click", askQuestion);
-    } else {
-        console.log("if outside")
+    }
+}
+
+let getName = function (array) {
+    scoreboard[array].name = document.querySelector("#name-form").value;
+}
+
+let createNameForm = function (array) {
+    let nameForm = document.createElement("input")
+    nameForm.className = "name-form";
+    nameForm.id = "name-form";
+    nameForm.type = "text";
+    nameForm.placeholder = "Your name Here";
+
+    let submitName = document.createElement("input")
+    submitName.className = "submit";
+    submitName.id = "submit";
+    submitName.type = "submit";
+    submitName.value = "enter";
+
+    let newLine = document.createElement("br")
+    answerListEl.appendChild(newLine)
+    answerListEl.appendChild(nameForm);
+    answerListEl.appendChild(submitName);
+
+    document.querySelector("#submit").addEventListener('click', function () { getName(array) });
+    document.querySelector("#submit").addEventListener('click', setHighscoreBoard);
+
+}
+
+let highscoreTable = function () {
+    answerListEl.textContent = JSON.parse(localStorage.getItem("scoreboard"))
+    
+}
+
+let saveHighscore = function () {
+    localStorage.setItem("scoreboard", JSON.stringify(scoreboard));
+}
+
+let setHighscoreBoard = function () {
+    saveHighscore();
+    answerListEl.textContent = "";
+    highscoreTable();
+}
+
+let highscoreCheck = function () {
+    if (scoreCheckLoop) {
+        for (z = 0; z < 5; z++) {
+            if (timer > scoreboard[z].score) {
+                answerListEl.textContent = "'You got a highscore please enter name.' - Andy Droid";
+                scoreboard[z].score = timer;
+                createNameForm(z);
+                break;
+            } else {
+                answerListEl.textContent = "'You did not get a highscore better luck next time.' - Andy Dorid";
+            }
+        }
+
+        scoreCheckLoop = false;
     }
 }
 
@@ -139,8 +227,7 @@ let finalScore = function () {
 
     timeStop = true;
     questionEl.textContent = "Your Final Score is " + timer;
-    questionEl.textContent = "Your Final Score is " + timer;
-
+    highscoreCheck();
 }
 
 let runQuiz = function () {
@@ -151,3 +238,5 @@ let runQuiz = function () {
 
 
 startButtonEl.addEventListener("click", runQuiz);
+scoresheetEl.addEventListener('click', clearBoard);
+scoresheetEl.addEventListener('click', setHighscoreBoard);
