@@ -11,29 +11,29 @@ let scoreboard = [];
 //Questions
 const questionsArray = [
     {
-        q: "This is a test question #1",
-        a: ["Answer 1", "Answer 2", "Answer 3", "Answer 4"],
-        ca: "Answer 1"
+        q: "'What data types are used for JavaScript' - Andy Droid",
+        a: ["Boolean", "String", "Number", "All Choices"],
+        ca: "All Choices"
     },
     {
-        q: "This is a test question #2",
-        a: ["Answer a", "Answer b", "Answer c", "Answer d"],
-        ca: "Answer b"
+        q: "'What is JavaScript' - Andy Droid",
+        a: ["JavaScript is a programming language", "A Tasty Taco", "A type of writing", "My favorite animal"],
+        ca: "JavaScript is a programming language"
     },
     {
-        q: "This is a test question #3",
-        a: ["Answer !", "Answer @", "Answer #", "Answer $"],
-        ca: "Answer #"
+        q: "'What allows you to repeat a section of code a certain number of times' - Andy Droid'",
+        a: ["function();", "if(){};", "for(){};", "var x = y;"],
+        ca: "for(){}"
     },
     {
-        q: "This is a test question #4",
-        a: ["Answer a", "Answer b", "Answer c", "Answer d"],
-        ca: "Answer c"
+        q: "'Which HTML element allows for JavaScript to be run in the HTML document.' - Andy Droid",
+        a: ["<script>", "<js>", "<animate>", "<style>"],
+        ca: "<script>"
     },
     {
-        q: "This is a test question #5",
-        a: ["Answer a", "Answer b", "Answer c", "Answer d"],
-        ca: "Answer d"
+        q: "'What Document method returns the first element within the document that matches the specified selector' - Andy Droid",
+        a: [".compatMode", ".activeElement", ".querySelector();", ".cookie;"],
+        ca: ".querySelector(selectors);"
     }];
 
 // QuerSelectors
@@ -148,6 +148,7 @@ let runTimer = function () {
 // reset page
 let resetButton = function () {
     saveHighscore();
+    scoreCheckLoop = true;
     window.location.reload();
 }
 
@@ -242,7 +243,6 @@ let addNewHighscore = function () {
 
 // checks for a highscore
 let highscoreCheck = function () {
-
     if (scoreboard.length < 5) {
         answerListEl.textContent = "'You got a highscore please enter name.' - Andy Droid";
         createNameForm();
@@ -267,7 +267,7 @@ let highscoreCheck = function () {
 
 // reads final quiz score and clears board
 let finalScore = function () {
-
+    questionEl.textContent = "Your Final Score is " + timer;
     if (scoreCheckLoop) {
         clearBoard();
         if (document.querySelector("#answer-button1") != null ||
@@ -281,7 +281,6 @@ let finalScore = function () {
         }
 
         timeStop = true;
-        questionEl.textContent = "Your Final Score is " + timer;
         highscoreCheck();
         scoreCheckLoop = false;
     }
