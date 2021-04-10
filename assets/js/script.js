@@ -1,5 +1,5 @@
 //Global Variables
-let timer = 60;
+let timer = 30;
 let newQuiz = true;
 let scoreCheckLoop = true;
 let questionChoosen = 0;
@@ -85,7 +85,7 @@ let createMultiChoice = function (choosenQuestion) {
 let checkAnswer = function (event) {
     let selectedAnswer = event.target.value;
     if (selectedAnswer === questionsArray[questionChoosen].ca) {
-        timer += 10;
+        timer += 5;
     } else {
         if (timer > 5) {
             timer -= 5;
