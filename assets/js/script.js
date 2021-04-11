@@ -23,7 +23,7 @@ const questionsArray = [
     {
         q: "'What allows you to repeat a section of code a certain number of times' - Andy Droid'",
         a: ["function();", "if(){};", "for(){};", "var x = y;"],
-        ca: "for(){}"
+        ca: "for(){};"
     },
     {
         q: "'Which HTML element allows for JavaScript to be run in the HTML document.' - Andy Droid",
@@ -33,8 +33,9 @@ const questionsArray = [
     {
         q: "'What Document method returns the first element within the document that matches the specified selector' - Andy Droid",
         a: [".compatMode", ".activeElement", ".querySelector();", ".cookie;"],
-        ca: ".querySelector(selectors);"
-    }];
+        ca: ".querySelector();"
+    },
+];
 
 // QuerSelectors
 let startButtonEl = document.querySelector("#answer-button");
@@ -45,7 +46,8 @@ let questionEl = document.querySelector("#question");
 let multipleChoiceEl = document.querySelector("#multiple-choice");
 let setTime = document.querySelector("#time");
 let mainEl = document.querySelector("#main");
-let scoresheetEl = document.querySelector("#scoresheet")
+let scoresheetEl = document.querySelector("#scoresheet");
+let scoreEl = document.querySelector("#score");
 
 // Empty page for new content
 let clearBoard = function () {
@@ -86,9 +88,11 @@ let checkAnswer = function (event) {
     let selectedAnswer = event.target.value;
     if (selectedAnswer === questionsArray[questionChoosen].ca) {
         timer += 5;
+        scoreEl.innerHTML = "Previous answer: &#9989;";
     } else {
         if (timer > 5) {
             timer -= 5;
+            scoreEl.innerHTML = "Previous answer: &#10060;";
         } else {
             timer = 0;
         }
@@ -198,6 +202,7 @@ let orderHighscore = function () {
 
 // Setups highscore page
 let setHighscoreBoard = function () {
+    scoreEl.innerHTML = "";
     scoresheetEl.textContent = "";
     clearBoard();
     orderHighscore();
