@@ -4,45 +4,15 @@
 A basic quiz on Javascript fundamentals.
 
 
-
-
-## Table of Contents (Optional)
-
-If your README is very long, add a table of contents to make it easy for users to find what they need.
-
-* [Installation](#installation)
-* [Usage](#usage)
-* [Credits](#credits)
-* [License](#license)
-
-
 ## Installation
-
-
-
+<a href="https://winkler102.github.io/js-quiz/">Website Link</a>
 
 ## Usage 
-
-
-
-
-## Credits
-
-
-
-
-## License
-
-
-
-## Badges
-
-
+A quiz to help learn JavaScript
 
 ## Features
-
-
-## Contributing
-
+Buttons
 
 ## Tests
+Test: Take quiz and select all wrong answers. Result: if 5 highscores already exist will not get highscore 
+Test: Take quiz and enter all correct answers. Result: if time is less than one of the 5 best times will get hioghscore and allowed to add intitals 
